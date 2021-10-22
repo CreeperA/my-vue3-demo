@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig } from 'axios'
+import { ElMessage } from 'element-plus'
 
 const request = axios.create({
   baseURL: import.meta.env.VITE_API_BASEURL
@@ -19,6 +20,10 @@ request.interceptors.request.use(
 // add a response interceptor
 request.interceptors.response.use(
   response => {
+    if (response.data.status && response.data.status !== 200) {
+      ElMessage.error(response.data.msg || '请求失败')
+      return Promise.reject(response.data)
+    }
     // any status code that lies within the range of 2xx cause this function to trigger
     // do something with reponse data
     return response
@@ -32,6 +37,6 @@ request.interceptors.response.use(
 
 export default <T = any>(config: AxiosRequestConfig) => {
   return request(config).then(res => {
-    return res.data.data as T
+    return (res.data.data || res.data) as T
   })
 }
