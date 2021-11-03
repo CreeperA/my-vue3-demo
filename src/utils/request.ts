@@ -23,7 +23,7 @@ request.interceptors.request.use(
     return Promise.reject(error)
   }
 )
-
+let isRefreshing = false
 // add a response interceptor
 request.interceptors.response.use(
   response => {
@@ -33,7 +33,9 @@ request.interceptors.response.use(
     if (!status || status === 200) {
       return response
     }
-    if (status === 41000) {
+    if (status === 410000) {
+      if (isRefreshing) return Promise.reject(response)
+      isRefreshing = true
       ElMessageBox.confirm('您的登录已过期,你可以取消停留在此页面,或确认重新登录', '登录过期', {
         confirmButtonText: '确认',
         cancelButtonText: '取消'
@@ -49,7 +51,7 @@ request.interceptors.response.use(
         })
         // 抛出异常
       }).finally(() => {
-
+        isRefreshing = false
       })
       return Promise.reject(response)
     }
