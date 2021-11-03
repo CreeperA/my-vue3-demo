@@ -7,7 +7,7 @@
     <template #dropdown>
       <el-dropdown-menu>
         <el-dropdown-item>个人中心</el-dropdown-item>
-        <el-dropdown-item @click="handleLogou">
+        <el-dropdown-item @click="handleLogout">
           退出登录
         </el-dropdown-item>
       </el-dropdown-menu>
@@ -24,7 +24,7 @@ import { useStore } from '@/store'
 const router = useRouter()
 const store = useStore()
 
-const handleLogou = () => {
+const handleLogout = () => {
   // 退出提示
   ElMessageBox.confirm('确认退出吗？', '退出提示', {
     confirmButtonText: '确定',
